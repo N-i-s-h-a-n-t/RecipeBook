@@ -1,20 +1,31 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Recipe } from '../core/model/recipe.model';
 import { RecipesService } from '../core/services/recipes.service';
-import { Subject, Subscribable, Subscription, catchError, from, map, of, retry, retryWhen, takeUntil, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscribable, Subscription, catchError, combineLatest, delayWhen, from, map, of, retry, retryWhen, take, takeUntil, tap, throwError, timer } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
-  styleUrls: ['./recipe-list.component.scss']
+  styleUrls: ['./recipe-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
-  recipes!: Recipe[];
+  // recipes!: Recipe[];
   subscription!: Subscription;
   destroy$= new Subject<void>();
   numbers = [];
   //  chapter 4 ---------- approach 3
   recipes$ = this.service.recipes$;
+  filterRecipeAction$ = this.service.filterRecipesAction$;
+
+  filteredRecipes$ = combineLatest([this.recipes$, this.filterRecipeAction$]).pipe(
+    map((resultArray: [Recipe[], Recipe]) => {
+      return resultArray[0].filter((recipe => {
+        console.log(recipe.title?.toLowerCase().indexOf(resultArray[1]?.title?.toLowerCase() ?? ''));
+        return recipe.title?.toLowerCase().indexOf(resultArray[1]?.title?.toLowerCase() ?? '') != -1
+      }))
+    })
+  )
 
   constructor(private service: RecipesService) {}
 
@@ -25,13 +36,19 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     // })
 
     //  --------------- chater 4 approach 2
-    this.service.getRecipes().pipe(
-      takeUntil(this.destroy$)).subscribe((result) => {
-        this.recipes = result;
-        console.log(this.recipes);
-      });
+    // this.service.getRecipes().pipe(
+    //   takeUntil(this.destroy$)).subscribe((result) => {
+    //     this.recipes = result;
+    //     console.log(this.recipes);
+    //   });
 
       // this.practice();
+
+     this.service.recipes$.pipe(takeUntil(this.destroy$))
+     .subscribe((recipes) => {
+      // this.recipes = recipes;
+     })
+
 
   }
 

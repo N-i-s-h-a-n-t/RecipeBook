@@ -10,11 +10,17 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from './core/header/header.component';
+import { HomeComponent } from './home/home.component';
+import { RecipeFilterComponent } from './recipe-filter/recipe-filter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RecipeListComponent
+    RecipeListComponent,
+    HeaderComponent,
+    HomeComponent,
+    RecipeFilterComponent
   ],
   imports: [
     BrowserModule,

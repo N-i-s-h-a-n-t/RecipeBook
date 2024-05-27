@@ -1,0 +1,26 @@
+
+.header {
+  padding: 0.5rem;
+  display: flex;
+  width: 100%;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+
+  .right-zone {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+  }
+
+  .left-zone {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 50px;
+
+    img {
+      width: 40px;
+    }
+
+  }
+
+}
